@@ -67,3 +67,18 @@ fullName("Stanley", laName)
             // log one to the console
             // save one returned string to a variable and then log that variable to the console.
 
+// && looks for the first falsy
+console.log(0 && true)
+// || looks for the first truthy
+console.log(0 || NaN || undefined )
+
+// == vs ===
+// == topically checks if they are the same
+// === checks if they are the same, and have the same datatype
+let userInput = "6"
+console.log(userInput == "name" )
+
+/*
+  Located in the comparing.txt file, there is a deeper dive into == vs ===
+*/
+

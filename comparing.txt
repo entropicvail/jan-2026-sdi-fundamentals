@@ -1,0 +1,174 @@
+0 == false → gives you true, not specifically because 0 is falsy, but rather because of a magic algorithm in the background of JavaScript.
+In this case what that algorithm is doing is, coercing types. Meaning 'false is a boolean that converts to the number 0'.  And 'true is a boolean that converts to the number 1'.
+So if 0 == false gives you true, because false is coerced,
+the same goes for 1 == true, because true is coerced as well.
+This is one of the many "Wild West" things that resided throughout JavaScript.
+
+Now that we know that booleans are coerced to become numbers, does that also work for other Falsy values, such as undefined, null, NaN?
+The short answer is no. That same algorithm mentioned earlier specifically handles these instances based on the datatype.
+
+NaN, is a very special case where it will never evaluate to true when compared to anything else, this includes another NaN.
+
+NaN == NaN  → false
+NaN === NaN → false
+There is a different way of checking if a value is NaN, but that will be discussed later.
+
+We know that undefined and null are both absent of values. Whether it be on purpose or not. So can we compare these to each other?
+
+Lets look at a few examples below comparing undefined to different things.
+undefined == null → true (this is an intentional special case in the aforementioned algorithm)
+undefined == 0 → false
+undefined == false → false
+undefined == undefined → true
+  unlike NaN you can compare undefined to itself and get true back, the same goes for null
+  you can replace undefined with null in the above 3 and get the same output.
+
+Now how do we check if something is NaN. By using a builtin method, that is part of the Number class.
+Number.isNaN(value) → if the value passed is NaN then true, everything else will give you false.
+
+If you want to avoid coercion, then ensure you utilize the triple ===.
+If you are comfortable with coercion, then utilize the double ==.
+Both option are correct based on what you are wanting your logic to do.
+
+Lets cover a simplified explanation of the algorithm I keep mentioning.
+  (Note this does not cover every single case of comparison)
+
+  What JS sees:
+  A == B
+
+  Rule 1: Same data type → compare normally
+    if both values have the same data type, JS will check if they match
+
+    1 == 1 → true
+    "SDI" == "SDI" → true
+    null == null → true
+    undefined == undefined → true
+    "Hi" == "hi"  → false
+
+  The only exception, same as discussed above
+    NaN == NaN  → false
+
+  Rule 2: null and undefined are special
+    The special exception we discussed earlier
+
+    null == undefined → true
+
+    null == 0 → false
+    undefined == false → false
+
+    Note: this is around dude to legacy reasons
+
+  Rule 3: Booleans get converted to numbers
+    If one side is boolean, either side, then the boolean is coerced to its number
+
+    true → 1
+    false → 0
+                      (How JS views the comparison)
+    false == 0 → true (same as 0 == 0)
+    false == 1 → false (same as 0 == 1)
+    true == 1 → true  (same as 1 == 1)
+    true == 0 → false (same as 1 == 0)
+
+  Rule 4: Strings and Numbers → string becomes a number
+    If one side is a string and the other is a number
+
+  "30" == 30 → true
+  "" == 0 → true
+  " " == 0 → true
+
+  Wait what????
+  Because:
+  Number(" ") === 0
+
+  Remember JS turns the string in this situation into a number. If you console log Number("") you are given 0. Experiment console logging different stings passed into the Number function. Below are some examples to get you started
+
+  console.log(Number(""))
+  console.log(Number(true))
+  console.log(Number(true))
+  console.log(Number(22))
+  console.log(Number("ABC"))
+
+  Rule 5: Objects → converted to primitives
+    If one side is an object: (the following happen in the order provided)
+    1 → Attempt .valueOf()
+    2 → If 1 fails, attempt .toString()
+    3 → If both fail, then compare again
+
+    Something to remember when reading through the below examples
+        Arrays are objects, console.log(typeof [1]) → object
+          To check if an object is an array, console.log(Array.isArray([1]))
+        In the end though an array is a type of object
+
+    [1] == 1 → true →→ WHY? [1].toString() gives back "1"
+                        JS is now evaluating "1" to 1
+                        And as we saw earlier "1" is passed into Number()
+                          returning 1, then comparing 1 == 1 gives us true
+
+                      This feels a bit like comparison inception
+
+    [] == "" → Number([]) == Number("") → 0 == 0 → true
+    [] == 0 → Number([]) == 0 → 0 == 0 → true
+
+  Rule 6: If nothing matches → false... always false
+
+    undefined == NaN → false
+    {} == {} → false (Because they are referencing different memory location)
+
+  TLDR:
+  == tries extremely hard to make two thing equal, but often times it is too hard
+
+  **HALL OF FAME OF WHY DOES THAT HAPPEN**
+    "" == 0 → true
+    "0" == 0 → true
+    [] == 0 → true
+    [] == "" → true
+    [[]] == "" → true
+    false == [] → true
+
+  Above is why more often than not you want to use === rather than ==.
+
+  Lets breakdown how === works.
+    Spoiler alert, this is a lot more straight forward and less stress inducing.
+
+  For starters both values being compared must have the same data type.
+    If they don't then false is immediate
+
+    This include that special rule that == uses.
+    undefined == null → true (due to special rule)
+    undefined === null → false (since they are not the same data type)
+
+
+    One rule that does carry over from == to === is the NaN rule.
+    You still cannot compare NaN to NaN, you must still use Number.isNaN(value)
+
+    NaN == NaN → false
+    NaN === NaN → false
+
+    Examples:
+      Numbers:
+        22 === 22 → true
+        "22" === 22 → false ("22" == 22 → true (because of the == algorithm))
+
+      Strings:
+      "hi" === "hi" → true
+      "hi" === "Hi" → The comparison is case sensitive and is done character-by-character
+
+      Objects:
+        {} === {} → false
+        [] === [] → false (remember an array is an object)
+
+        const a = {};
+        const b = a;
+        a === b → true
+        a === {} → false → JS compares by reference, not by value
+        b === {} → false → JS compares by reference, not by value
+
+      Note: functions are also considered objects
+
+
+  Here are some reason to get in the habit of using === over ==
+    * No coercion
+    * No surprises
+    * Intent is obvious
+    * code review is more straight forward
+    * Bugs are localized
