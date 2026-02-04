@@ -1,0 +1,24 @@
+{
+  "name": "jan-2026-sdi-fundamentals",
+  "version": "1.0.0",
+  "description": "This is just a landing zone repository for SDI JAN 2026 demos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "live-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gSchool/jan-2026-sdi-fundamentals.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gSchool/jan-2026-sdi-fundamentals/issues"
+  },
+  "homepage": "https://github.com/gSchool/jan-2026-sdi-fundamentals#readme",
+  "dependencies": {
+    "live-server": "^1.2.2"
+  }
+}
