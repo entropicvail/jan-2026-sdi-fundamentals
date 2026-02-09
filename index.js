@@ -32,4 +32,8 @@ let catchSumPokemans = async () => {
   return pokeman
 }
 
+
+//Should console.log => undefined
+// console.log(catchSumPokemans())
+
 catchSumPokemans().then(res => console.log(res))
