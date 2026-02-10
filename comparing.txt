@@ -157,7 +157,7 @@ Lets cover a simplified explanation of the algorithm I keep mentioning.
         {} === {} → false
         [] === [] → false (remember an array is an object)
 
-        const a = {};
+        const a = {stuff:"things"};
         const b = a;
         a === b → true
         a === {} → false → JS compares by reference, not by value
