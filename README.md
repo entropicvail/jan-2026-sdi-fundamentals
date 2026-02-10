@@ -20,3 +20,5 @@ I will be using this exact repository in the fundamentals live demos. And the co
   * →→→→
   * Reminder
   * Note
+
+## THIS UPDATE IS TO SHOW HOW TO SYNC A FORKED REPO
